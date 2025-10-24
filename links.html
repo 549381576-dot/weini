@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>链接 - 维尼N1ckZzzAI</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+    <style>
+        .link-card-big {
+            display: block;
+            padding: 3rem;
+            background: var(--bg-gradient);
+            color: white;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-bottom: 2rem;
+        }
+        .link-card-big:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.3);
+        }
+        .link-card-big h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .link-list {
+            display: grid;
+            gap: 1rem;
+        }
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+        .link-item:hover {
+            transform: translateX(8px);
+            background: var(--card-gradient);
+        }
+        .link-icon {
+            font-size: 2rem;
+        }
+        .link-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        .link-info p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container">
+            <a href="index.html" class="logo">维尼N1ckZzzAI</a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="photos.html">摄影</a>
+                <a href="writing.html">文章</a>
+                <a href="resume.html">简历</a>
+                <a href="links.html" class="active">链接</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero" style="padding: 4rem 0 2rem;">
+            <div class="container">
+                <h1 class="section-title">🔗 我的链接</h1>
+                <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">在这里找到我</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container" style="max-width: 600px;">
+                <!-- 小红书置顶 -->
+                <a href="https://www.xiaohongshu.com/user/PLACEHOLDER" target="_blank" class="link-card-big">
+                    <h2>📱 小红书</h2>
+                    <p style="font-size: 1.1rem; opacity: 0.9;">分享生活点滴，记录美好瞬间</p>
+                </a>
+
+                <!-- 其他链接 -->
+                <div class="link-list">
+                    <a href="https://space.bilibili.com/PLACEHOLDER" target="_blank" class="link-item">
+                        <div class="link-icon">📺</div>
+                        <div class="link-info">
+                            <h3>Bilibili</h3>
+                            <p>创作视频内容，分享知识与经验</p>
+                        </div>
+                    </a>
+
+                    <a href="https://github.com/PLACEHOLDER" target="_blank" class="link-item">
+                        <div class="link-icon">💻</div>
+                        <div class="link-info">
+                            <h3>GitHub</h3>
+                            <p>开源项目与代码分享</p>
+                        </div>
+                    </a>
+
+                    <a href="mailto:hi@example.com" class="link-item">
+                        <div class="link-icon">📧</div>
+                        <div class="link-info">
+                            <h3>Email</h3>
+                            <p>hi@example.com</p>
+                        </div>
+                    </a>
+
+                    <a href="https://blog.example.com" target="_blank" class="link-item">
+                        <div class="link-icon">📝</div>
+                        <div class="link-info">
+                            <h3>个人博客</h3>
+                            <p>深度思考与创作分享</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 维尼N1ckZzzAI. All rights reserved.</p>
+            <p class="footer-note">Built with ❤️ using pure HTML, CSS & JavaScript</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

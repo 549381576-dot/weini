@@ -1,0 +1,169 @@
+为我搭建一个“极简、清爽、速度快”的个人网站，整体参考 **huohuo90.com/home** 的结构、样式与交互（只参考布局与交互感受，不抄视觉与文案），并把我的 **小红书链接、摄影作品、文章链接、简历** 清晰展示。产出需可直接本地预览与一键部署（Vercel/Netlify）。
+
+---
+
+# 目标
+## 项目约束（请严格执行）
+- **技术栈**：Next.js 14（App Router）+ TypeScript + Tailwind CSS + shadcn/ui + Framer Motion + Lucide-React 图标。
+- **设计语言**：留白多、网格化、对齐强、极简。默认浅色 + 自适应暗色（使用 `class` 方案）。
+- **字体**：系统字体栈即可（苹果/思源/苹方/Inter 等按平台回退）。
+- **性能**：LCP < 2.0s、CLS≈0、所有图片走 `next/image`，自动生成尺寸与懒加载；组件按需加载。
+- **可访问性**：语义化标签、`aria-*`、可键盘操作、对比度通过 WCAG AA。
+- **SEO**：`metadata` / OpenGraph / sitemap / robots / canonical / 结构化数据（JSON‑LD）。
+- **代码质量**：ESLint + Prettier + TypeCheck 通过；组件拆分清晰、props 有注释；每个页面写 e2e 用户路径说明（注释即可）。
+
+---
+
+## 内容数据（用占位，保留可配置）
+- 站点标题：`Zik Edn – Personal Site`
+- 个人一句话：`写字、拍照、做点好玩的东西。`
+- 导航：`Home / Photos / Writing / Resume / Links`
+- 我的小红书：`https://www.xiaohongshu.com/user/PLACEHOLDER`
+- 摄影作品：若干图片分组（街拍/人像/旅行），每张含：`title、location、date、tags、src、blurDataURL`
+- 文章列表：`title、summary、date、url`
+- 简历链接（PDF）：`/resume/zik-edn-resume.pdf`（提供一个示例 PDF 占位）
+- 社交/外链：小红书、Bilibili、GitHub、Email（`mailto:`）
+
+> 将上述内容抽象为 **`/data/*.json` 或 `contentlayer`**（任选其一）。提供 **`content/` 目录** 以便我未来用 MDX 写文。
+
+---
+
+## 站点信息架构（结构与交互参考目标站点，但不复制其文案/贴图）
+1) **Home**
+   - 顶部简介卡（头像、名字、tagline、社交图标）。
+   - 四宫格入口卡片：**Photos / Writing / Resume / Links**（悬浮轻微缩放与阴影）。
+   - 最新 3 篇文章（卡片式），最新 6 张照片（瀑布流/等高网格）。
+   - 轻动效：进入淡入、滚动微浮、Hover 交互自然。
+2) **Photos**
+   - 左侧为标签/分组过滤，右侧为响应式图片网格（`<Image/>`）。
+   - 点击图片进入 **Lightbox**（左右切换、Esc 关闭、方向键导航）。
+   - 顶部提供筛选：标签多选 / 时间排序（desc）。
+3) **Writing**
+   - 文章卡片列表（标题、摘要、发布日期、`外链` 图标）。
+   - 支持搜索（前端模糊搜索）与标签过滤。
+4) **Resume**
+   - 页面嵌入 PDF 预览（提供示例 PDF），同时给出「下载 PDF」按钮。
+   - 右侧信息卡：技能栈、联系方式、当前状态（可编辑）。
+5) **Links**
+   - 小红书固定置顶卡（大按钮），其他社交/项目按卡片列表展示。
+   - CTA：`联系我` -> `mailto:xxx@xxx.com`
+6) **全局**
+   - 顶部导航（滚动隐藏/显示，移动端 Drawer）。
+   - 页脚：版权、备案占位、社交链接。
+   - 主题切换（亮/暗），记忆到 `localStorage`。
+
+---
+
+## UI/动效细节（请精准还原这种“克制的轻动效”）
+- 进入：`motion.div` 200–300ms、20px 上浮、淡入。
+- Hover：卡片轻微上浮（`translateY(-2px)`）、阴影从 `sm` 到 `lg`。
+- 按钮：`Button` 用 shadcn/ui，圆角 `2xl`，内边距适中。
+- 图片：圆角 `xl`，`object-cover`，支持 `blurDataURL` 骨架。
+- 滚动：`scroll-behavior: smooth`；锚点带细线条进度条（阅读进度可选）。
+- 暗色：不改变布局，只调色板；文本/边框/卡片层次清晰。
+
+---
+
+## 实现步骤（让我们从零创建代码）
+1. **初始化项目**
+   - `npx create-next-app@latest my-site --ts --eslint --tailwind --app --src-dir --import-alias "@/*"`
+   - 安装：`shadcn/ui`、`framer-motion`、`lucide-react`、`contentlayer`（如选）或用 `data/*.json`。
+   - 配置 Tailwind：启用 `container`、`prose`、`darkMode: "class"`，设计基础色板（浅灰/深灰）。
+2. **全局基础**
+   - 建立 `app/layout.tsx`（含主题提供、元数据）、`app/(site)/layout.tsx` 分区。
+   - 建立通用组件：`SiteHeader`（含主题切换/Drawer）、`SiteFooter`、`Card`、`Section`、`Lightbox`、`MasonryGrid`。
+3. **数据层**
+   - `data/photos.json`、`data/posts.json`、`data/links.json`、`data/profile.json`。
+   - 写 `lib/content.ts` 统一读取 + 类型定义（Zod 校验或 TS interface）。
+4. **页面搭建**
+   - `app/page.tsx`（Home）、`app/photos/page.tsx`、`app/writing/page.tsx`、`app/resume/page.tsx`、`app/links/page.tsx`。
+   - 为每个页面写独立 `metadata`，并提供 `generateStaticParams`（如有子路由）。
+5. **交互**
+   - `Photos` 页：过滤（多选标签芯片）、排序（下拉），Lightbox（键盘/点击关闭）。
+   - `Writing` 页：搜索输入 + 标签过滤、外链新窗口打开，图标提示。
+6. **资源占位**
+   - 放置 `public/avatar.jpg`、`public/opengraph-image.png`、`public/resume/zik-edn-resume.pdf`（示例）。
+   - 图片通过 `next/image` 引用，生成 `blurDataURL`（可用占位 base64）。
+7. **SEO 与地图**
+   - `app/sitemap.ts`、`app/robots.ts`，OpenGraph 图（`/opengraph-image.png`）。
+8. **部署脚本**
+   - `package.json` 中 `"build"`, `"start"`, `"lint"`, `"typecheck"`, `"preview"`。
+   - 提供 `vercel.json`（可选）与 README 的部署说明。
+
+---
+
+## 验收标准（You MUST meet all of them）
+- 本地运行 `pnpm dev` / `npm run dev` 即可预览，所有页面与路由可用。
+- 首页含：简介卡、4 入口卡、最新文章与最新图片区块、动效自然。
+- Photos 页：过滤/排序 + Lightbox + 响应式网格，图片加载丝滑。
+- Writing 页：可搜索/可筛选，外链文章打开正常。
+- Resume 页：PDF 可预览与下载，信息卡存在。
+- Links 页：小红书置顶，链接均可用。
+- 亮/暗模式可切换并记忆；无明显布局抖动；Lighthouse 基础分数优良（Performance/Best Practices/SEO/Accessibility 均 >90）。
+- 代码通过 ESLint/TS 检查；组件与函数具 JSDoc/注释；目录结构清晰。
+
+---
+
+## 待我填充的变量（用占位并暴露在 `data/*.json`）
+```ts
+{
+  "xiaohongshu": "https://www.xiaohongshu.com/user/PLACEHOLDER",
+  "email": "hi@example.com",
+  "links": [
+    {"label": "Bilibili", "url": "https://space.bilibili.com/PLACEHOLDER"},
+    {"label": "GitHub", "url": "https://github.com/PLACEHOLDER"}
+  ],
+  "photos": [
+    {"title": "Street 01", "location": "Hangzhou", "date": "2024-11-02", "tags": ["street"], "src": "/photos/street-01.jpg", "blurDataURL": "data:image/..."},
+    {"title": "Portrait 01", "location": "Lishui", "date": "2025-01-18", "tags": ["portrait"], "src": "/photos/portrait-01.jpg", "blurDataURL": "data:image/..."}
+  ],
+  "posts": [
+    {"title": "关于节奏与留白", "summary": "谈谈做网站的极简主义。", "date": "2025-09-01", "url": "https://example.com/post-1"},
+    {"title": "拍照这件小事", "summary": "轻松记录日常的若干建议。", "date": "2025-08-21", "url": "https://example.com/post-2"}
+  ]
+}
+```
+
+---
+
+## 目录结构（生成时请采用此结构）
+```
+/app
+  /(site)
+    /photos/page.tsx
+    /writing/page.tsx
+    /resume/page.tsx
+    /links/page.tsx
+  /api/og/route.ts (可选：生成 OG 图)
+  /page.tsx
+/components
+  Card.tsx, SiteHeader.tsx, SiteFooter.tsx, ThemeToggle.tsx, Lightbox.tsx, MasonryGrid.tsx
+/data
+  profile.json, photos.json, posts.json, links.json
+/lib
+  content.ts, utils.ts
+/public
+  /photos/*.jpg
+  /resume/zik-edn-resume.pdf
+  avatar.jpg
+  opengraph-image.png
+```
+
+---
+
+## 关键实现要点（请直接写代码而不是伪代码）
+- `Lightbox`：Portal + `useEffect` 监听键盘事件；支持左右切换、点击遮罩关闭。
+- `MasonryGrid`：使用 CSS columns 或 `grid-auto-rows` 实现响应式；确保列间距一致。
+- 过滤与搜索：客户端实现，`useMemo` 优化；URL Query 同步状态（可复制链接分享）。
+- `ThemeToggle`：`data-theme` 或 `class` 切换，首屏避免闪烁（优先级样式 + SSR 注水）。
+- SEO：在 `app/layout.tsx` 定义 `metadata`；为文章/图片生成 OpenGraph 元数据。
+
+---
+
+## 交付清单
+1. 完整可运行的 Next.js 项目代码。
+2. `README.md`：快速启动、如何替换数据、如何部署到 Vercel。
+3. 预置占位内容（照片/文章/简历 PDF 占位）。
+4. 基本单元/交互测试样例（可选，至少写 1–2 个 vitest/playwright 样例）。
+
+> 如果信息不足，请做出合理假设，**先给到一版完整可运行项目**，我再填入真实链接与内容。

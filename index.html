@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>维尼N1ckZzzAI – Personal Site</title>
+    <meta name="description" content="写字、拍照、做点好玩的东西。">
+    
+    <!-- SEO 优化 -->
+    <meta property="og:title" content="维尼N1ckZzzAI – Personal Site">
+    <meta property="og:description" content="写字、拍照、做点好玩的东西。">
+    <meta property="og:image" content="/opengraph-image.png">
+    <meta property="og:type" content="website">
+    
+    <!-- 样式 -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>">
+</head>
+<body>
+    <!-- 光标跟随背景 -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <div class="container">
+            <div class="logo">
+                <img src="images/avatar.jpg" alt="维尼N1ckZzzAI" class="logo-avatar">
+                <span>维尼N1ckZzzAI</span>
+            </div>
+            <div class="nav-links" id="mainNav">
+                <a href="#hero" class="nav-link active" data-section="hero">首页</a>
+                <a href="#photos" class="nav-link" data-section="photos">摄影</a>
+                <a href="#writing" class="nav-link" data-section="writing">文章</a>
+                <a href="resume.html" class="nav-link">简历</a>
+                <a href="game.html" class="nav-link">游戏</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main>
+        <!-- 简介卡片 -->
+        <section class="hero" id="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="avatar">
+                        <img id="avatarImg" src="images/avatar.jpg" alt="维尼N1ckZzzAI">
+                    </div>
+                    <h1 class="hero-title">维尼N1ckZzzAI</h1>
+                    <p class="hero-tagline">写字、拍照、做点好玩的东西。</p>
+                    <div class="social-links">
+                        <!-- 小红书Logo - 请把小红书logo图片保存为 xiaohongshu-logo.png 放到 images 文件夹 -->
+                        <a href="https://xhslink.com/m/p1si8qaerV" target="_blank" title="小红书" rel="noopener noreferrer">
+                            <img src="images/xiaohongshu-logo.png" alt="小红书" style="width: 24px; height: 24px;">
+                        </a>
+                        
+                        <!-- 抖音Logo - 请把抖音logo图片保存为 douyin-logo.png 放到 images 文件夹 -->
+                        <a href="https://v.douyin.com/FLbtCnGSbwk/" target="_blank" title="抖音" rel="noopener noreferrer">
+                            <img src="images/douyin-logo.png" alt="抖音" style="width: 24px; height: 24px;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 四宫格入口 -->
+        <section class="features">
+            <div class="container">
+                <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                    <a href="photos.html" class="feature-card">
+                        <div class="feature-icon">📷</div>
+                        <h3>摄影作品</h3>
+                        <p>用镜头记录生活</p>
+                    </a>
+                    <a href="writing.html" class="feature-card">
+                        <div class="feature-icon">✍️</div>
+                        <h3>文章分享</h3>
+                        <p>记录思考与成长</p>
+                    </a>
+                    <a href="resume.html" class="feature-card">
+                        <div class="feature-icon">📄</div>
+                        <h3>个人简历</h3>
+                        <p>了解更多关于我</p>
+                    </a>
+                    <a href="game.html" class="feature-card">
+                        <div class="feature-icon">🎮</div>
+                        <h3>小游戏</h3>
+                        <p>来玩贪吃蛇吧</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 最新照片 -->
+        <section class="section" id="photos">
+            <div class="container">
+                <h2 class="section-title">最新照片</h2>
+                <div class="photo-grid" id="latestPhotos">
+                    <!-- 动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 最新文章 -->
+        <section class="section" id="writing">
+            <div class="container">
+                <h2 class="section-title">最新文章</h2>
+                <div class="post-grid" id="latestPosts">
+                    <!-- 动态加载 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 维尼N1ckZzzAI. All rights reserved.</p>
+            <p class="footer-note">Built with ❤️ using pure HTML, CSS & JavaScript</p>
+        </div>
+    </footer>
+
+    <!-- 脚本 -->
+    <script src="script.js"></script>
+</body>
+</html>
+
