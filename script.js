@@ -501,12 +501,47 @@ const initCommentSystem = () => {
     }
 };
 
+// 全局标记：是否有hash
+let hasInitialHash = false;
+
+// ========== 初始化导航状态 ==========
+const initNavState = () => {
+    const hash = window.location.hash;
+    const navLinks = document.querySelectorAll('.nav-link[data-section]');
+    
+    // 检查是否有hash
+    hasInitialHash = !!hash;
+    
+    // 移除所有active
+    navLinks.forEach(link => link.classList.remove('active'));
+    
+    // 延迟执行，确保DOM完全加载
+    setTimeout(() => {
+        if (hash) {
+            // 如果有hash，高亮对应的导航
+            const targetLink = document.querySelector(`.nav-link[href="${hash}"]`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+                console.log('Hash高亮:', hash);
+            } else {
+                // 默认高亮首页
+                const heroLink = document.querySelector('.nav-link[data-section="hero"]');
+                if (heroLink) heroLink.classList.add('active');
+            }
+        } else {
+            // 没有hash，默认高亮首页
+            const heroLink = document.querySelector('.nav-link[data-section="hero"]');
+            if (heroLink) heroLink.classList.add('active');
+        }
+    }, 100);
+};
+
 // ========== 初始化 ==========
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     loadLatestPosts();
     loadLatestPhotos();
-    initScrollNavigation();
+    initNavState(); // 初始化导航状态
     initCursorGlow();
     initNavScrollEffect();
     initCommentSystem();
@@ -520,6 +555,21 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 延迟执行动画观察，让CSS动画先完成
     setTimeout(observeElements, 100);
+    
+    // 延迟初始化滚动导航，确保hash高亮不被覆盖
+    setTimeout(() => {
+        initScrollNavigation();
+        // 清除hash标记，允许滚动高亮
+        setTimeout(() => {
+            hasInitialHash = false;
+        }, 500);
+    }, 200);
+    
+    // 监听hash变化
+    window.addEventListener('hashchange', () => {
+        hasInitialHash = !!window.location.hash;
+        initNavState();
+    });
 });
 
 // ========== 滚动导航高亮 ==========
@@ -529,14 +579,19 @@ const initScrollNavigation = () => {
     
     if (sections.length === 0 || navLinks.length === 0) return;
     
-    // 滚动监听
+    let isScrolling = false; // 标记是否正在滚动
+    
+    // 滚动监听 - 使用更精确的配置
     const observerOptions = {
         root: null,
-        rootMargin: '-20% 0px -70% 0px',
-        threshold: 0
+        rootMargin: '-100px 0px -66% 0px', // 优化检测区域
+        threshold: [0, 0.1, 0.5] // 多个阈值，更准确
     };
     
     const observerCallback = (entries) => {
+        // 如果是有hash的初始加载，不更新导航高亮
+        if (hasInitialHash && !isScrolling) return;
+        
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const sectionId = entry.target.getAttribute('id');
@@ -561,20 +616,39 @@ const initScrollNavigation = () => {
         observer.observe(section);
     });
     
+    // 监听用户滚动，更新isScrolling标记
+    let scrollTimer;
+    window.addEventListener('scroll', () => {
+        isScrolling = true;
+        hasInitialHash = false; // 用户开始滚动后，清除hash标记
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+            isScrolling = false;
+        }, 100);
+    });
+    
     // 平滑滚动
     navLinks.forEach(link => {
         link.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const target = document.querySelector(targetId);
-            if (target) {
-                const navHeight = document.querySelector('.nav').offsetHeight;
-                const targetPosition = target.offsetTop - navHeight;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
+            // 只处理锚点链接
+            const href = this.getAttribute('href');
+            if (href.startsWith('#')) {
+                e.preventDefault();
+                const targetId = href;
+                const target = document.querySelector(targetId);
+                if (target) {
+                    const navHeight = document.querySelector('.nav').offsetHeight;
+                    const targetPosition = target.offsetTop - navHeight - 20; // 额外20px间距
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 立即更新active状态
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                }
             }
         });
     });
