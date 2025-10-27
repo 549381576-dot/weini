@@ -314,10 +314,11 @@ const initCommentSystem = () => {
         const comments = loadComments();
         if (comments.length === 0) return;
         
-        const commentsHTML = comments.map(comment => {
-            // 随机选择一个emoji作为头像
+        const commentsHTML = comments.map((comment, index) => {
+            // 随机选择一个emoji作为头像（基于索引保证一致性）
             const emojis = ['😊', '🎨', '📷', '✨', '🌟', '💫', '🎯', '🚀', '🎭', '🎪'];
-            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const emojiIndex = index % emojis.length;
+            const emoji = emojis[emojiIndex];
             
             const imageHTML = comment.image ? `
                 <div class="comment-image">
@@ -326,12 +327,15 @@ const initCommentSystem = () => {
             ` : '';
             
             return `
-                <div class="comment-item">
-                    <div class="comment-avatar">${randomEmoji}</div>
+                <div class="comment-item" data-comment-index="${index}">
+                    <div class="comment-avatar">${emoji}</div>
                     <div class="comment-content">
                         <div class="comment-header">
                             <span class="comment-author">${escapeHtml(comment.name)}</span>
-                            <span class="comment-time">${comment.date}</span>
+                            <div class="comment-meta">
+                                <span class="comment-time">${comment.date}</span>
+                                <button class="delete-comment-btn" data-index="${index}" title="删除这条留言">🗑️</button>
+                            </div>
                         </div>
                         <p class="comment-text">${escapeHtml(comment.message)}</p>
                         ${imageHTML}
@@ -342,6 +346,50 @@ const initCommentSystem = () => {
         
         // 在示例留言后添加用户留言
         commentsList.innerHTML += commentsHTML;
+        
+        // 为所有删除按钮添加事件监听
+        const deleteButtons = commentsList.querySelectorAll('.delete-comment-btn');
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(e.target.getAttribute('data-index'));
+                deleteComment(index);
+            });
+        });
+    };
+    
+    // 删除单条留言
+    const deleteComment = (index) => {
+        if (confirm('确定要删除这条留言吗？')) {
+            const comments = loadComments();
+            comments.splice(index, 1); // 删除指定索引的留言
+            localStorage.setItem('userComments', JSON.stringify(comments));
+            
+            // 重新渲染留言列表
+            commentsList.innerHTML = `
+                <div class="comment-item">
+                    <div class="comment-avatar">🎨</div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">访客</span>
+                            <span class="comment-time">2025/1/27 14:30:25</span>
+                        </div>
+                        <p class="comment-text">网站做得很棒！界面简洁又有设计感 ✨</p>
+                    </div>
+                </div>
+                
+                <div class="comment-item">
+                    <div class="comment-avatar">📷</div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">路过的摄影师</span>
+                            <span class="comment-time">2025/1/26 16:45:12</span>
+                        </div>
+                        <p class="comment-text">摄影作品很有感觉，期待更多更新！</p>
+                    </div>
+                </div>
+            `;
+            renderComments();
+        }
     };
     
     // 防止XSS攻击的HTML转义函数
@@ -364,10 +412,13 @@ const initCommentSystem = () => {
         }
         
         // 创建留言对象
+        const now = new Date();
+        const dateTimeString = `${now.toLocaleDateString('zh-CN')} ${now.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit', second: '2-digit'})}`;
+        
         const comment = {
             name: name,
             message: message,
-            date: new Date().toLocaleDateString('zh-CN'),
+            date: dateTimeString,
             image: currentImageData // 包含图片数据
         };
         
