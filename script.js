@@ -216,8 +216,58 @@ const initNavScrollEffect = () => {
 const initCommentSystem = () => {
     const commentForm = document.getElementById('commentForm');
     const commentsList = document.getElementById('commentsList');
+    const imageInput = document.getElementById('commentImage');
+    const uploadImageBtn = document.getElementById('uploadImageBtn');
+    const imagePreview = document.getElementById('imagePreview');
     
     if (!commentForm) return;
+    
+    let currentImageData = null; // 存储当前选择的图片
+    
+    // 图片上传按钮点击
+    if (uploadImageBtn && imageInput) {
+        uploadImageBtn.addEventListener('click', () => {
+            imageInput.click();
+        });
+        
+        // 图片选择处理
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // 检查文件大小（2MB限制）
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('图片太大了！请选择小于2MB的图片。');
+                    return;
+                }
+                
+                // 检查文件类型
+                if (!file.type.startsWith('image/')) {
+                    alert('请选择图片文件（JPG、PNG、GIF等）');
+                    return;
+                }
+                
+                // 读取图片
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    currentImageData = event.target.result;
+                    
+                    // 显示预览
+                    imagePreview.innerHTML = `
+                        <img src="${currentImageData}" alt="预览">
+                        <button type="button" class="remove-image" onclick="removeImagePreview()">×</button>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
+    // 移除图片预览（全局函数）
+    window.removeImagePreview = () => {
+        currentImageData = null;
+        imagePreview.innerHTML = '';
+        imageInput.value = '';
+    };
     
     // 从本地存储加载留言
     const loadComments = () => {
@@ -242,6 +292,12 @@ const initCommentSystem = () => {
             const emojis = ['😊', '🎨', '📷', '✨', '🌟', '💫', '🎯', '🚀', '🎭', '🎪'];
             const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
             
+            const imageHTML = comment.image ? `
+                <div class="comment-image">
+                    <img src="${comment.image}" alt="留言图片" onclick="window.open(this.src)">
+                </div>
+            ` : '';
+            
             return `
                 <div class="comment-item">
                     <div class="comment-avatar">${randomEmoji}</div>
@@ -251,6 +307,7 @@ const initCommentSystem = () => {
                             <span class="comment-time">${comment.date}</span>
                         </div>
                         <p class="comment-text">${escapeHtml(comment.message)}</p>
+                        ${imageHTML}
                     </div>
                 </div>
             `;
@@ -283,14 +340,16 @@ const initCommentSystem = () => {
         const comment = {
             name: name,
             message: message,
-            date: new Date().toLocaleDateString('zh-CN')
+            date: new Date().toLocaleDateString('zh-CN'),
+            image: currentImageData // 包含图片数据
         };
         
         // 保存并渲染
         saveComment(comment);
         
-        // 清空表单
+        // 清空表单和图片预览
         commentForm.reset();
+        removeImagePreview();
         
         // 重新渲染留言列表
         commentsList.innerHTML = `

@@ -153,6 +153,17 @@
                                 <label for="commentMessage">留言内容 *</label>
                                 <textarea id="commentMessage" name="message" required placeholder="说点什么..." rows="4"></textarea>
                             </div>
+                            <div class="form-group">
+                                <label for="commentImage">上传图片（选填）</label>
+                                <input type="file" id="commentImage" name="image" accept="image/*" style="display: none;">
+                                <div class="image-upload-area">
+                                    <button type="button" class="upload-image-btn" id="uploadImageBtn">
+                                        📷 选择图片
+                                    </button>
+                                    <span class="image-upload-hint">支持 JPG、PNG、GIF 格式，建议小于 2MB</span>
+                                    <div id="imagePreview" class="image-preview"></div>
+                                </div>
+                            </div>
                             <button type="submit" class="submit-btn">发送留言 ✨</button>
                         </form>
                     </div>
