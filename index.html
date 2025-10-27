@@ -33,6 +33,7 @@
                 <a href="#writing" class="nav-link" data-section="writing">文章</a>
                 <a href="resume.html" class="nav-link">简历</a>
                 <a href="game.html" class="nav-link">游戏</a>
+                <a href="#comments" class="nav-link" data-section="comments">留言</a>
             </div>
             <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
                 <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -123,6 +124,64 @@
                 <h2 class="section-title">最新文章</h2>
                 <div class="post-grid" id="latestPosts">
                     <!-- 动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 留言板 -->
+        <section class="section" id="comments">
+            <div class="container">
+                <h2 class="section-title">💬 留言板</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+                    欢迎留下你的足迹 ~
+                </p>
+                
+                <div class="comments-container">
+                    <!-- 留言表单 -->
+                    <div class="comment-form-card">
+                        <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">✍️ 写下你的留言</h3>
+                        <form id="commentForm" class="comment-form">
+                            <div class="form-group">
+                                <label for="commentName">昵称 *</label>
+                                <input type="text" id="commentName" name="name" required placeholder="你的昵称">
+                            </div>
+                            <div class="form-group">
+                                <label for="commentEmail">邮箱（选填，不会公开）</label>
+                                <input type="email" id="commentEmail" name="email" placeholder="your@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="commentMessage">留言内容 *</label>
+                                <textarea id="commentMessage" name="message" required placeholder="说点什么..." rows="4"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">发送留言 ✨</button>
+                        </form>
+                    </div>
+
+                    <!-- 留言列表 -->
+                    <div class="comments-list" id="commentsList">
+                        <!-- 示例留言 -->
+                        <div class="comment-item">
+                            <div class="comment-avatar">🎨</div>
+                            <div class="comment-content">
+                                <div class="comment-header">
+                                    <span class="comment-author">访客</span>
+                                    <span class="comment-time">2025-01-27</span>
+                                </div>
+                                <p class="comment-text">网站做得很棒！界面简洁又有设计感 ✨</p>
+                            </div>
+                        </div>
+                        
+                        <div class="comment-item">
+                            <div class="comment-avatar">📷</div>
+                            <div class="comment-content">
+                                <div class="comment-header">
+                                    <span class="comment-author">路过的摄影师</span>
+                                    <span class="comment-time">2025-01-26</span>
+                                </div>
+                                <p class="comment-text">摄影作品很有感觉，期待更多更新！</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

@@ -212,6 +212,123 @@ const initNavScrollEffect = () => {
     });
 };
 
+// ========== 留言板功能 ==========
+const initCommentSystem = () => {
+    const commentForm = document.getElementById('commentForm');
+    const commentsList = document.getElementById('commentsList');
+    
+    if (!commentForm) return;
+    
+    // 从本地存储加载留言
+    const loadComments = () => {
+        const savedComments = JSON.parse(localStorage.getItem('userComments') || '[]');
+        return savedComments;
+    };
+    
+    // 保存留言到本地存储
+    const saveComment = (comment) => {
+        const comments = loadComments();
+        comments.unshift(comment); // 新留言放在前面
+        localStorage.setItem('userComments', JSON.stringify(comments));
+    };
+    
+    // 渲染留言
+    const renderComments = () => {
+        const comments = loadComments();
+        if (comments.length === 0) return;
+        
+        const commentsHTML = comments.map(comment => {
+            // 随机选择一个emoji作为头像
+            const emojis = ['😊', '🎨', '📷', '✨', '🌟', '💫', '🎯', '🚀', '🎭', '🎪'];
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            return `
+                <div class="comment-item">
+                    <div class="comment-avatar">${randomEmoji}</div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">${escapeHtml(comment.name)}</span>
+                            <span class="comment-time">${comment.date}</span>
+                        </div>
+                        <p class="comment-text">${escapeHtml(comment.message)}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // 在示例留言后添加用户留言
+        commentsList.innerHTML += commentsHTML;
+    };
+    
+    // 防止XSS攻击的HTML转义函数
+    const escapeHtml = (text) => {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    };
+    
+    // 表单提交处理
+    commentForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('commentName').value.trim();
+        const message = document.getElementById('commentMessage').value.trim();
+        
+        if (!name || !message) {
+            alert('请填写昵称和留言内容');
+            return;
+        }
+        
+        // 创建留言对象
+        const comment = {
+            name: name,
+            message: message,
+            date: new Date().toLocaleDateString('zh-CN')
+        };
+        
+        // 保存并渲染
+        saveComment(comment);
+        
+        // 清空表单
+        commentForm.reset();
+        
+        // 重新渲染留言列表
+        commentsList.innerHTML = `
+            <div class="comment-item">
+                <div class="comment-avatar">🎨</div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <span class="comment-author">访客</span>
+                        <span class="comment-time">2025-01-27</span>
+                    </div>
+                    <p class="comment-text">网站做得很棒！界面简洁又有设计感 ✨</p>
+                </div>
+            </div>
+            
+            <div class="comment-item">
+                <div class="comment-avatar">📷</div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <span class="comment-author">路过的摄影师</span>
+                        <span class="comment-time">2025-01-26</span>
+                    </div>
+                    <p class="comment-text">摄影作品很有感觉，期待更多更新！</p>
+                </div>
+            </div>
+        `;
+        renderComments();
+        
+        // 显示成功提示
+        alert('留言发送成功！✨');
+        
+        // 滚动到留言列表
+        commentsList.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    
+    // 初始加载留言
+    renderComments();
+};
+
 // ========== 初始化 ==========
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
@@ -220,6 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollNavigation();
     initCursorGlow();
     initNavScrollEffect();
+    initCommentSystem();
     
     // 如果本地存储有头像，加载它（保留你之前上传的头像）
     const avatarImg = document.getElementById('avatarImg');
