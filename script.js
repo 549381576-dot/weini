@@ -224,25 +224,44 @@ const initCommentSystem = () => {
     
     let currentImageData = null; // 存储当前选择的图片
     
+    // 移除图片预览
+    const removeImagePreview = () => {
+        currentImageData = null;
+        if (imagePreview) imagePreview.innerHTML = '';
+        if (imageInput) imageInput.value = '';
+    };
+    
+    // 将函数暴露到全局作用域
+    window.removeImagePreview = removeImagePreview;
+    
     // 图片上传按钮点击
     if (uploadImageBtn && imageInput) {
-        uploadImageBtn.addEventListener('click', () => {
+        console.log('图片上传按钮已绑定');
+        
+        uploadImageBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('点击上传按钮');
             imageInput.click();
         });
         
         // 图片选择处理
         imageInput.addEventListener('change', (e) => {
+            console.log('文件选择触发');
             const file = e.target.files[0];
             if (file) {
+                console.log('选择的文件:', file.name, file.type, file.size);
+                
                 // 检查文件大小（2MB限制）
                 if (file.size > 2 * 1024 * 1024) {
                     alert('图片太大了！请选择小于2MB的图片。');
+                    imageInput.value = '';
                     return;
                 }
                 
                 // 检查文件类型
                 if (!file.type.startsWith('image/')) {
                     alert('请选择图片文件（JPG、PNG、GIF等）');
+                    imageInput.value = '';
                     return;
                 }
                 
@@ -250,24 +269,32 @@ const initCommentSystem = () => {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     currentImageData = event.target.result;
+                    console.log('图片读取成功，长度:', currentImageData.length);
                     
                     // 显示预览
                     imagePreview.innerHTML = `
                         <img src="${currentImageData}" alt="预览">
-                        <button type="button" class="remove-image" onclick="removeImagePreview()">×</button>
+                        <button type="button" class="remove-image" id="removeImageBtn">×</button>
                     `;
+                    
+                    // 为删除按钮添加事件监听
+                    const removeBtn = document.getElementById('removeImageBtn');
+                    if (removeBtn) {
+                        removeBtn.addEventListener('click', removeImagePreview);
+                    }
                 };
+                
+                reader.onerror = (error) => {
+                    console.error('读取图片失败:', error);
+                    alert('读取图片失败，请重试');
+                };
+                
                 reader.readAsDataURL(file);
             }
         });
+    } else {
+        console.warn('图片上传元素未找到:', {uploadImageBtn, imageInput});
     }
-    
-    // 移除图片预览（全局函数）
-    window.removeImagePreview = () => {
-        currentImageData = null;
-        imagePreview.innerHTML = '';
-        imageInput.value = '';
-    };
     
     // 从本地存储加载留言
     const loadComments = () => {
