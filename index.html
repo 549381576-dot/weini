@@ -139,7 +139,10 @@
                 <div class="comments-container">
                     <!-- 留言表单 -->
                     <div class="comment-form-card">
-                        <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">✍️ 写下你的留言</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin: 0; font-size: 1.2rem;">✍️ 写下你的留言</h3>
+                            <button type="button" id="clearAllComments" class="clear-comments-btn" title="清空所有留言">🗑️ 清空留言</button>
+                        </div>
                         <form id="commentForm" class="comment-form">
                             <div class="form-group">
                                 <label for="commentName">昵称 *</label>

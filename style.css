@@ -715,6 +715,24 @@ body::before {
     transform: translateY(0);
 }
 
+.clear-comments-btn {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clear-comments-btn:hover {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    transform: scale(1.05);
+}
+
 /* 图片上传区域 */
 .image-upload-area {
     display: flex;

@@ -413,6 +413,41 @@ const initCommentSystem = () => {
     
     // 初始加载留言
     renderComments();
+    
+    // 清空所有留言功能
+    const clearAllCommentsBtn = document.getElementById('clearAllComments');
+    if (clearAllCommentsBtn) {
+        clearAllCommentsBtn.addEventListener('click', () => {
+            if (confirm('确定要清空所有留言吗？此操作无法撤销！')) {
+                localStorage.removeItem('userComments');
+                // 重新渲染留言列表（只显示示例留言）
+                commentsList.innerHTML = `
+                    <div class="comment-item">
+                        <div class="comment-avatar">🎨</div>
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <span class="comment-author">访客</span>
+                                <span class="comment-time">2025-01-27</span>
+                            </div>
+                            <p class="comment-text">网站做得很棒！界面简洁又有设计感 ✨</p>
+                        </div>
+                    </div>
+                    
+                    <div class="comment-item">
+                        <div class="comment-avatar">📷</div>
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <span class="comment-author">路过的摄影师</span>
+                                <span class="comment-time">2025-01-26</span>
+                            </div>
+                            <p class="comment-text">摄影作品很有感觉，期待更多更新！</p>
+                        </div>
+                    </div>
+                `;
+                alert('所有留言已清空！');
+            }
+        });
+    }
 };
 
 // ========== 初始化 ==========
